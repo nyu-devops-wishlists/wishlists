@@ -1,11 +1,11 @@
 """
-Test cases for <your resource name> Model
+Test cases for Wishlist Model
 
 """
 import logging
 import unittest
 import os
-from service.models import Homepage_Schema, DataValidationError, db
+from service.models import Wishlist, DataValidationError, db
 from service import app
 
 DATABASE_URI = os.getenv(
@@ -13,10 +13,10 @@ DATABASE_URI = os.getenv(
 )
 
 ######################################################################
-#  <your resource name>   M O D E L   T E S T   C A S E S
+#  WISHLIST M O D E L   T E S T   C A S E S
 ######################################################################
-class TestHomepage_Schema(unittest.TestCase):
-    """ Test Cases for <your resource name> Model """
+class TestWishlist(unittest.TestCase):
+    """ Test Cases for Wishlist Model """
 
     @classmethod
     def setUpClass(cls):
@@ -25,7 +25,7 @@ class TestHomepage_Schema(unittest.TestCase):
         app.config['DEBUG'] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
         app.logger.setLevel(logging.CRITICAL)
-        Homepage_Schema.init_db(app)
+        Wishlist.init_db(app)
 
     @classmethod
     def tearDownClass(cls):
@@ -46,6 +46,41 @@ class TestHomepage_Schema(unittest.TestCase):
 #  P L A C E   T E S T   C A S E S   H E R E 
 ######################################################################
 
-    def test_XXXX(self):
-        """ Test something """
-        self.assertTrue(True)
+    def test_create_a_wishlist(self):
+        """ Create a wishlist and assert that it exists """
+        wishlist = Wishlist(
+            name="Rudi's Wishlist",
+            email="rudi@stern.nyu.edu",
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+        )
+
+
+        self.assertTrue(wishlist != None)
+        self.assertEqual(wishlist.id, None)
+        self.assertEqual(wishlist.name, "Rudi's Wishlist")
+        self.assertEqual(wishlist.email, "rudi@stern.nyu.edu")
+        self.assertEqual(wishlist.shared_with1, "Becca Dailey")
+        self.assertEqual(wishlist.shared_with2, "Thomas Chao")
+        self.assertEqual(wishlist.shared_with3, "Isaias Martin")
+
+
+    def test_add_a_wishlist(self):
+        """ Create a wishlist and add it to the database """
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+        wishlist = Wishlist(
+            name="Rudi's Wishlist",
+            email="rudi@stern.nyu.edu",
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+        )
+        self.assertTrue(wishlist != None)
+        self.assertEqual(wishlist.id, None)
+        wishlist.create()
+        # Asert that it was assigned an id and shows up in the database
+        self.assertEqual(wishlist.id, 1)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)

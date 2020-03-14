@@ -1,5 +1,5 @@
 """
-Models for Homepage_Schema
+Models for Wishlist
 
 All of the models are stored in this module
 """
@@ -16,9 +16,9 @@ class DataValidationError(Exception):
     pass
 
 
-class Homepage_Schema(db.Model):
+class Wishlist(db.Model):
     """
-    Class that represents a Homepage_Schema
+    Class that represents a Wishlist
     """
 
     app = None
@@ -32,11 +32,11 @@ class Homepage_Schema(db.Model):
     shared_with3 = db.Column(db.String(63))
 
     def __repr__(self):
-        return "<Homepage_Schema %r id=[%s]>" % (self.name, self.id)
+        return "<Wishlist %r id=[%s]>" % (self.name, self.id)
 
     def create(self):
         """
-        Creates a Homepage_Schema to the database
+        Creates a Wishlist to the database
         """
         logger.info("Creating %s", self.name)
         self.id = None  # id must be none to generate next primary key
@@ -45,19 +45,19 @@ class Homepage_Schema(db.Model):
 
     def save(self):
         """
-        Updates a Homepage_Schema to the database
+        Updates a Wishlist to the database
         """
         logger.info("Saving %s", self.name)
         db.session.commit()
 
     def delete(self):
-        """ Removes a Homepage_Schema from the data store """
+        """ Removes a Wishlist from the data store """
         logger.info("Deleting %s", self.name)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
-        """ Serializes a Homepage_Schema into a dictionary """
+        """ Serializes a Wishlist into a dictionary """
         return {
             "id": self.id,
             "name": self.name,
@@ -69,23 +69,23 @@ class Homepage_Schema(db.Model):
 
     def deserialize(self, data):
         """
-        Deserializes a Homepage_Schema from a dictionary
+        Deserializes a Wishlist from a dictionary
 
         Args:
             data (dict): A dictionary containing the resource data
         """
         try:
-            self.id = data["id"]
+            # self.id = data["id"]
             self.name = data["name"]
             self.email = data["email"]
             self.shared_with1 = data["shared_with1"]
             self.shared_with2 = data["shared_with2"]
             self.shared_with3 = data["shared_with3"]
         except KeyError as error:
-            raise DataValidationError("Invalid Homepage_Schema: missing " + error.args[0])
+            raise DataValidationError("Invalid Wishlist: missing " + error.args[0])
         except TypeError as error:
             raise DataValidationError(
-                "Invalid Homepage_Schema: body of request contained" "bad or no data"
+                "Invalid Wishlist: body of request contained" "bad or no data"
             )
         return self
 
@@ -101,38 +101,38 @@ class Homepage_Schema(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the Homepage_Schemas in the database """
-        logger.info("Processing all Homepage_Schemas")
+        """ Returns all of the Wishlist in the database """
+        logger.info("Processing all Wishlist")
         return cls.query.all()
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a Homepage_Schema by it's ID """
+        """ Finds a Wishlist by it's ID """
         logger.info("Processing lookup for id %s ...", by_id)
         return cls.query.get(by_id)
 
     @classmethod
     def find_or_404(cls, by_id):
-        """ Find a Homepage_Schema by it's id """
+        """ Find a Wishlist by it's id """
         logger.info("Processing lookup or 404 for id %s ...", by_id)
         return cls.query.get_or_404(by_id)
 
     @classmethod
     def find_by_name(cls, name):
-        """ Returns all Homepage_Schemas with the given name
+        """ Returns all Wishlist with the given name
 
         Args:
-            name (string): the name of the Homepage_Schemas you want to match
+            name (string): the name of the Wishlist you want to match
         """
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
     
     @classmethod
     def find_by_name(cls, id):
-        """ Returns all Homepage_Schemas with the given name
+        """ Returns all Wishlist with the given name
 
         Args:
-            name (string): the name of the Homepage_Schemas you want to match
+            name (string): the name of the Wishlist you want to match
         """
         logger.info("Processing name query for %s ...", id)
         return cls.query.filter(cls.id == id)

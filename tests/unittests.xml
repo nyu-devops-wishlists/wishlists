@@ -1,1 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="2" errors="0" failures="0" skip="0"><testcase classname="tests.test_models.TestHomepage_Schema" name="test_XXXX" time="0.038"></testcase><testcase classname="tests.test_service.TestYourResourceServer" name="test_index" time="0.021"></testcase></testsuite>
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="5" errors="1" failures="0" skip="0"><testcase classname="tests.test_models.TestWishlist" name="test_add_a_wishlist" time="0.055"></testcase><testcase classname="tests.test_models.TestWishlist" name="test_create_a_wishlist" time="0.022"></testcase><testcase classname="tests.test_service.TestYourResourceServer" name="test_bad_request" time="0.022"><error type="builtins.TypeError" message="test_bad_request() missing 1 required positional argument: 'bad_request_mock'&#10;-------------------- &gt;&gt; begin captured logging &lt;&lt; --------------------&#10;flask.app: INFO: Initializing database&#10;--------------------- &gt;&gt; end captured logging &lt;&lt; ---------------------"><![CDATA[  File "/usr/lib/python3.6/unittest/case.py", line 59, in testPartExecutor
+    yield
+  File "/usr/lib/python3.6/unittest/case.py", line 605, in run
+    testMethod()
+test_bad_request() missing 1 required positional argument: 'bad_request_mock'
+-------------------- >> begin captured logging << --------------------
+flask.app: INFO: Initializing database
+--------------------- >> end captured logging << ---------------------]]></error></testcase><testcase classname="tests.test_service.TestYourResourceServer" name="test_create_wishlist" time="0.036"></testcase><testcase classname="tests.test_service.TestYourResourceServer" name="test_index" time="0.022"></testcase></testsuite>
