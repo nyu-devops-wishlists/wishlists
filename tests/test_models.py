@@ -109,4 +109,5 @@ class TestWishlist(unittest.TestCase):
         self.assertIsNot(wishlist, None)
         self.assertEqual(wishlist.id, expected_wishlist.id)
         self.assertEqual(wishlist.name, expected_wishlist.name)
-        self.assertEqual(wishlist.available, expected_wishlist.available)
+        self.assertEqual(wishlist.email, expected_wishlist.email)
+

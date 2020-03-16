@@ -51,7 +51,7 @@ def create_wishlists():
 # RETRIEVE A WISHLIST
 ######################################################################
 @app.route("/wishlists/<wishlist_id>", methods=["GET"])
-def get_wishlists(wishlists_id):
+def get_wishlists(wishlist_id):
     """
     Retrieve a single Wishlist
     This endpoint will return a Wishlist based on it's id

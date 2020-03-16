@@ -62,10 +62,6 @@ class TestYourResourceServer(TestCase):
         """ Create a new wishlist """
         test_wishlist = self._create_a_wishlist()
         
-        # Make sure location header is set
-        location = resp.headers.get("Location", None)
-        self.assertIsNotNone(location)
-        
         # Check the data is correct
         new_wishlist = resp.get_json()
         self.assertEqual(new_wishlist["name"], test_wishlist["name"], "Names do not match")
@@ -91,11 +87,11 @@ class TestYourResourceServer(TestCase):
         # get the id of a wishlist
         test_wishlist = self._create_a_wishlist()
         resp = self.app.get(
-            "/wishlists/{}".format(test_wishlist.id), content_type="application/json"
+            "/wishlists/{}".format(test_wishlist["id"]), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
-        self.assertEqual(data["name"], test_wishlist.name)
+        self.assertEqual(data["name"], test_wishlist["name"])
 
 
     def _create_a_wishlist(self):
@@ -103,9 +99,9 @@ class TestYourResourceServer(TestCase):
         test_wishlist = {
             "name": "Rudi's wishlist",
             "email": "rudi@stern.nyu.edu",
-            "shared_with1":"Rebecca Dailey",
-            "shared_with2":"Thomas Chao",
-            "shared_with3":"Isaias Martin"
+            "shared_with1": "Rebecca Dailey",
+            "shared_with2": "Thomas Chao",
+            "shared_with3": "Isaias Martin"
         }
         resp = self.app.post(
             "/wishlists",
@@ -114,5 +110,6 @@ class TestYourResourceServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         new_wishlist = resp.get_json()
-        test_wishlist.id = new_wishlist["id"]
+        logging.debug(new_wishlist)
+        test_wishlist["id"] = new_wishlist["id"]
         return test_wishlist
