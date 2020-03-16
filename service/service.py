@@ -48,6 +48,21 @@ def create_wishlists():
     )
 
 ######################################################################
+# RETRIEVE A WISHLIST
+######################################################################
+@app.route("/wishlists/<wishlist_id>", methods=["GET"])
+def get_wishlists(wishlists_id):
+    """
+    Retrieve a single Wishlist
+    This endpoint will return a Wishlist based on it's id
+    """
+    app.logger.info("Request to retrieve a Wishlist with id: %s", wishlist_id)
+    wishlist = Wishlist.find(wishlist_id)
+    if not wishlist:
+        raise NotFound("Wishlist with id '{}' was not found.".format(wishlist_id))
+    return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 

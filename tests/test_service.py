@@ -60,19 +60,7 @@ class TestYourResourceServer(TestCase):
     
     def test_create_wishlist(self):
         """ Create a new wishlist """
-        test_wishlist = {
-            "name": "Rudi's wishlist",
-            "email": "rudi@stern.nyu.edu",
-            "shared_with1":"Rebecca Dailey",
-            "shared_with2":"Thomas Chao",
-            "shared_with3":"Isaias Martin"
-        }
-        resp = self.app.post(
-            "/wishlists",
-            json=test_wishlist,
-            content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        test_wishlist = self._create_a_wishlist()
         
         # Make sure location header is set
         location = resp.headers.get("Location", None)
@@ -97,3 +85,34 @@ class TestYourResourceServer(TestCase):
         # self.assertEqual(new_wishlist["shared_with1"], test_wishlist["shared_with1"], "shared_with1 do not match")
         # self.assertEqual(new_wishlist["shared_with2"], test_wishlist["shared_with2"], "shared_with2 do not match")
         # self.assertEqual(new_wishlist["shared_with3"], test_wishlist["shared_with3"], "shared_with3 do not match")
+
+    def test_get_wishlist(self):
+        """ Get a single Wishlist """
+        # get the id of a wishlist
+        test_wishlist = self._create_a_wishlist()
+        resp = self.app.get(
+            "/wishlists/{}".format(test_wishlist.id), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data["name"], test_wishlist.name)
+
+
+    def _create_a_wishlist(self):
+        """ Factory that creates a wishlist on the server """
+        test_wishlist = {
+            "name": "Rudi's wishlist",
+            "email": "rudi@stern.nyu.edu",
+            "shared_with1":"Rebecca Dailey",
+            "shared_with2":"Thomas Chao",
+            "shared_with3":"Isaias Martin"
+        }
+        resp = self.app.post(
+            "/wishlists",
+            json=test_wishlist,
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        new_wishlist = resp.get_json()
+        test_wishlist.id = new_wishlist["id"]
+        return test_wishlist

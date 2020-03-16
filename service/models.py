@@ -128,7 +128,7 @@ class Wishlist(db.Model):
         return cls.query.filter(cls.name == name)
     
     @classmethod
-    def find_by_name(cls, id):
+    def find_by_id(cls, id):
         """ Returns all Wishlist with the given name
 
         Args:
