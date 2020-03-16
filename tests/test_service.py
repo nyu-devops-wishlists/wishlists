@@ -60,7 +60,8 @@ class TestYourResourceServer(TestCase):
     
     def test_create_wishlist(self):
         """ Create a new wishlist """
-        test_wishlist = self._create_a_wishlist()
+        test_wishlist, resp = self._create_a_wishlist()
+        
         
         # Check the data is correct
         new_wishlist = resp.get_json()
@@ -85,7 +86,7 @@ class TestYourResourceServer(TestCase):
     def test_get_wishlist(self):
         """ Get a single Wishlist """
         # get the id of a wishlist
-        test_wishlist = self._create_a_wishlist()
+        test_wishlist, resp = self._create_a_wishlist()
         resp = self.app.get(
             "/wishlists/{}".format(test_wishlist["id"]), content_type="application/json"
         )
@@ -112,4 +113,4 @@ class TestYourResourceServer(TestCase):
         new_wishlist = resp.get_json()
         logging.debug(new_wishlist)
         test_wishlist["id"] = new_wishlist["id"]
-        return test_wishlist
+        return test_wishlist, resp
