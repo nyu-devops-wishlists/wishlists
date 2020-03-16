@@ -84,3 +84,29 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(wishlist.id, 1)
         wishlists = Wishlist.all()
         self.assertEqual(len(wishlists), 1)
+    
+    
+    def test_find_wishlist(self):
+        """ Find a Wishlist by ID """
+        wishlist = Wishlist(
+            name="Rudi's Wishlist",
+            email="rudi@stern.nyu.edu",
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+        )
+        wishlist.create()
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+        
+        expected_wishlist = wishlists[0]
+        logging.debug(expected_wishlist)
+
+        # make sure they got saved
+        self.assertEqual(len(Wishlist.all()), 1)
+        # find the 2nd pet in the list
+        wishlist = Wishlist.find(expected_wishlist.id)
+        self.assertIsNot(wishlist, None)
+        self.assertEqual(wishlist.id, expected_wishlist.id)
+        self.assertEqual(wishlist.name, expected_wishlist.name)
+        self.assertEqual(wishlist.available, expected_wishlist.available)
