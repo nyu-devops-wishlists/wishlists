@@ -62,7 +62,10 @@ class TestYourResourceServer(TestCase):
         """ Create a new wishlist """
         test_wishlist, resp = self._create_a_wishlist()
         
+<<<<<<< HEAD
         
+=======
+>>>>>>> eb571bf323b310278cb2ec2392d38da3d4c8fd03
         # Check the data is correct
         new_wishlist = resp.get_json()
         self.assertEqual(new_wishlist["name"], test_wishlist["name"], "Names do not match")
@@ -114,3 +117,4 @@ class TestYourResourceServer(TestCase):
         logging.debug(new_wishlist)
         test_wishlist["id"] = new_wishlist["id"]
         return test_wishlist, resp
+
