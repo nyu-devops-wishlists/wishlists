@@ -111,3 +111,47 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(wishlist.name, expected_wishlist.name)
         self.assertEqual(wishlist.email, expected_wishlist.email)
 
+    def test_find_by_name(self):
+        """ Find a wishlist by Name """
+        Wishlist(
+            name="Rudi's Wishlist", 
+            email="rudi@stern.nyu.edu", 
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+        ).create()
+        Wishlist(
+            name="Bea's Wishlist", 
+            email="bea@stern.nyu.edu",
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+            ).create()
+        wishlists = Wishlist.find_by_name("Bea's Wishlist")
+        self.assertEqual(wishlists[0].email, "bea@stern.nyu.edu")
+        self.assertEqual(wishlists[0].shared_with1, "Becca Dailey")
+        self.assertEqual(wishlists[0].shared_with2, "Thomas Chao")
+        self.assertEqual(wishlists[0].shared_with3, "Isaias Martin")
+    
+    def test_find_by_email(self):
+        """ Find Wishlists by email """
+        Wishlist(
+            name="Rudi's Wishlist", 
+            email="rudi@stern.nyu.edu", 
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+        ).create()
+        Wishlist(
+            name="Bea's Wishlist", 
+            email="bea@stern.nyu.edu",
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+            ).create()
+        wishlists = Wishlist.find_by_email("rudi@stern.nyu.edu")
+        self.assertEqual(wishlists[0].name, "Rudi's Wishlist")
+        self.assertEqual(wishlists[0].shared_with1, "Becca Dailey")
+        self.assertEqual(wishlists[0].shared_with2, "Thomas Chao")
+        self.assertEqual(wishlists[0].shared_with3, "Isaias Martin")
+
