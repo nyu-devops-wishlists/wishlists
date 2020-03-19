@@ -12,6 +12,7 @@ from unittest.mock import MagicMock, patch
 from flask_api import status  # HTTP Status Codes
 from service.models import db
 from service.service import app, init_db
+from .factories import WishlistFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
@@ -114,3 +115,27 @@ class TestYourResourceServer(TestCase):
         test_wishlist["id"] = new_wishlist["id"]
         return test_wishlist, resp
 
+
+    def test_get_wishlist_list(self):
+        """ Get a list of Wishlist """
+        self._create_wishlists(5)
+        resp = self.app.get("/wishlists")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 5)
+
+    def _create_wishlists(self, count):
+        """ Factory method to create pets in bulk """
+        wishlists = []
+        for _ in range(count):
+            test_wishlist = WishlistFactory()
+            resp = self.app.post(
+                "/wishlists", json=test_wishlist.serialize(), content_type="application/json"
+            )
+            self.assertEqual(
+                resp.status_code, status.HTTP_201_CREATED, "Could not create test wishlist"
+            )
+            new_wishlist = resp.get_json()
+            test_wishlist.id = new_wishlist["id"]
+            wishlists.append(test_wishlist)
+        return wishlists

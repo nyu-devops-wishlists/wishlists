@@ -136,3 +136,13 @@ class Wishlist(db.Model):
         """
         logger.info("Processing name query for %s ...", id)
         return cls.query.filter(cls.id == id)
+
+    @classmethod
+    def find_by_email(cls, email):
+        """ Returns all Wishlist with the given email
+
+        Args:
+            name (string): the name of the Wishlist you want to match
+        """
+        logger.info("Processing name query for %s ...", email)
+        return cls.query.filter(cls.email == email)

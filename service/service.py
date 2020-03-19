@@ -63,6 +63,26 @@ def get_wishlists(wishlist_id):
     return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
 
 ######################################################################
+# LIST ALL Whishlists
+######################################################################
+@app.route("/wishlists", methods=["GET"])
+def list_wishlists():
+    """ Returns all of the Whishlists """
+    app.logger.info("Request for wishlists")
+    wishlists = []
+    email = request.args.get("email")
+    name = request.args.get("name")
+    if name:
+        wishlists = Wishlist.find_by_name(name)
+    elif email:
+        wishlists = Wishlist.find_by_email(email)
+    else:
+        wishlists = Wishlist.all()
+
+    results = [wishlist.serialize() for wishlist in wishlists]
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
