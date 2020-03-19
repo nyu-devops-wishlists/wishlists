@@ -63,7 +63,7 @@ def get_wishlists(wishlist_id):
     return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
 
 ######################################################################
-# LIST ALL Whishlists
+# LIST ALL Wishlists
 ######################################################################
 @app.route("/wishlists", methods=["GET"])
 def list_wishlists():
