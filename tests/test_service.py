@@ -94,8 +94,8 @@ class TestYourResourceServer(TestCase):
         self.assertEqual(data["name"], test_wishlist["name"])
 
     def test_delete_wishlist(self):
-        """ Delete an Account """
-        # get the id of an account
+        """ Delete a Wishlist """
+        # get the id of a wishlist
         test_wishlist, resp = self._create_a_wishlist()
         resp = self.app.delete(
             "/wishlists/{}".format(test_wishlist["id"]), 
