@@ -48,7 +48,7 @@ def create_wishlists():
     )
 
 ######################################################################
-# RETRIEVE A WISHLIST
+# RETRIEVE A WISHLIST by ID
 ######################################################################
 @app.route("/wishlists/<wishlist_id>", methods=["GET"])
 def get_wishlists(wishlist_id):
@@ -76,6 +76,26 @@ def delete_wishlists(wishlist_id):
     if wishlist:
         wishlist.delete()
     return make_response("", status.HTTP_204_NO_CONTENT)
+# LIST ALL Wishlists (or query by name / email)
+######################################################################
+@app.route("/wishlists", methods=["GET"])
+def list_wishlists():
+    """ Returns all of the Whishlists """
+    app.logger.info("Request for wishlists")
+    wishlists = []
+    # e.g., /wishlists?email=rudi@isawesome.com
+    email = request.args.get("email")
+    # e.g., /wishlists?name=rudi
+    name = request.args.get("name")
+    if name:
+        wishlists = Wishlist.find_by_name(name)
+    elif email:
+        wishlists = Wishlist.find_by_email(email)
+    else:
+        wishlists = Wishlist.all()
+
+    results = [wishlist.serialize() for wishlist in wishlists]
+    return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

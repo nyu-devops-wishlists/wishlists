@@ -12,6 +12,7 @@ from unittest.mock import MagicMock, patch
 from flask_api import status  # HTTP Status Codes
 from service.models import db
 from service.service import app, init_db
+from .factories import WishlistFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
@@ -82,8 +83,8 @@ class TestYourResourceServer(TestCase):
         # self.assertEqual(new_wishlist["shared_with2"], test_wishlist["shared_with2"], "shared_with2 do not match")
         # self.assertEqual(new_wishlist["shared_with3"], test_wishlist["shared_with3"], "shared_with3 do not match")
 
-    def test_get_wishlist(self):
-        """ Get a single Wishlist """
+    def test_get_wishlist_by_id(self):
+        """ Get a single Wishlist by id """
         # get the id of a wishlist
         test_wishlist, resp = self._create_a_wishlist()
         resp = self.app.get(
@@ -123,3 +124,59 @@ class TestYourResourceServer(TestCase):
         test_wishlist["id"] = new_wishlist["id"]
         return test_wishlist, resp
 
+
+    def test_get_wishlist_list(self):
+        """ Get a list of Wishlist """
+        self._create_wishlists(5)
+        resp = self.app.get("/wishlists")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 5)
+
+    def _create_wishlists(self, count):
+        """ Factory method to create pets in bulk """
+        wishlists = []
+        for _ in range(count):
+            test_wishlist = WishlistFactory()
+            resp = self.app.post(
+                "/wishlists", json=test_wishlist.serialize(), content_type="application/json"
+            )
+            self.assertEqual(
+                resp.status_code, status.HTTP_201_CREATED, "Could not create test wishlist"
+            )
+            new_wishlist = resp.get_json()
+            test_wishlist.id = new_wishlist["id"]
+            wishlists.append(test_wishlist)
+        return wishlists
+
+
+    def _create_a_wishlist(self):
+        """ Factory that creates a wishlist on the server """
+        test_wishlist = {
+            "name": "Rudi's wishlist",
+            "email": "rudi@stern.nyu.edu",
+            "shared_with1": "Rebecca Dailey",
+            "shared_with2": "Thomas Chao",
+            "shared_with3": "Isaias Martin"
+        }
+        resp = self.app.post(
+            "/wishlists",
+            json=test_wishlist,
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        new_wishlist = resp.get_json()
+        logging.debug(new_wishlist)
+        test_wishlist["id"] = new_wishlist["id"]
+        return test_wishlist, resp
+
+    def test_get_wishlist(self):
+        """ Get a single Wishlist """
+        # get the id of a wishlist
+        test_wishlist, resp = self._create_a_wishlist()
+        resp = self.app.get(
+            "/wishlists/{}".format(test_wishlist["id"]), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data["name"], test_wishlist["name"])

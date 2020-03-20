@@ -107,13 +107,13 @@ class Wishlist(db.Model):
 
     @classmethod
     def find(cls, by_id):
-        """ Finds a Wishlist by it's ID """
+        """ Finds a Wishlist by its ID """
         logger.info("Processing lookup for id %s ...", by_id)
         return cls.query.get(by_id)
 
     @classmethod
     def find_or_404(cls, by_id):
-        """ Find a Wishlist by it's id """
+        """ Find a Wishlist by its id or return 404 """
         logger.info("Processing lookup or 404 for id %s ...", by_id)
         return cls.query.get_or_404(by_id)
 
@@ -127,12 +127,22 @@ class Wishlist(db.Model):
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
     
+    # @classmethod
+    # def find_by_id(cls, id):
+    #     """ Returns all Wishlist with the given id
+
+    #     Args:
+    #         id (string): the id of the Wishlist you want to match
+    #     """
+    #     logger.info("Processing id query for %s ...", id)
+    #     return cls.query.filter(cls.id == id)
+
     @classmethod
-    def find_by_id(cls, id):
-        """ Returns all Wishlist with the given name
+    def find_by_email(cls, email):
+        """ Returns all Wishlist with the given email
 
         Args:
             name (string): the name of the Wishlist you want to match
         """
-        logger.info("Processing name query for %s ...", id)
-        return cls.query.filter(cls.id == id)
+        logger.info("Processing name query for %s ...", email)
+        return cls.query.filter(cls.email == email)
