@@ -94,27 +94,15 @@ class TestYourResourceServer(TestCase):
         data = resp.get_json()
         self.assertEqual(data["name"], test_wishlist["name"])
 
-    def test_get_wishlist_by_name(self):
-        """ Get a single Wishlist by name """
-        # get the name of a wishlist
+    def test_delete_wishlist(self):
+        """ Delete a Wishlist """
+        # get the id of a wishlist
         test_wishlist, resp = self._create_a_wishlist()
-        resp = self.app.get(
-            "/wishlists?name={}".format(test_wishlist["name"]), content_type="application/json"
+        resp = self.app.delete(
+            "/wishlists/{}".format(test_wishlist["id"]), 
+            content_type="application/json"
         )
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()[0]
-        self.assertEqual(data["name"], test_wishlist["name"])
-
-    def test_get_wishlist_by_email(self):
-        """ Get a single Wishlist by email """
-        # get the email of a wishlist
-        test_wishlist, resp = self._create_a_wishlist()
-        resp = self.app.get(
-            "/wishlists?email={}".format(test_wishlist["email"]), content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()[0]
-        self.assertEqual(data["email"], test_wishlist["email"])
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
 
     def _create_a_wishlist(self):
         """ Factory that creates a wishlist on the server """
