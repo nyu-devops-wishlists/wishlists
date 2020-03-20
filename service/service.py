@@ -48,7 +48,7 @@ def create_wishlists():
     )
 
 ######################################################################
-# RETRIEVE A WISHLIST
+# RETRIEVE A WISHLIST by ID
 ######################################################################
 @app.route("/wishlists/<wishlist_id>", methods=["GET"])
 def get_wishlists(wishlist_id):
@@ -63,14 +63,16 @@ def get_wishlists(wishlist_id):
     return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
 
 ######################################################################
-# LIST ALL Wishlists
+# LIST ALL Wishlists (or query by name / email)
 ######################################################################
 @app.route("/wishlists", methods=["GET"])
 def list_wishlists():
     """ Returns all of the Whishlists """
     app.logger.info("Request for wishlists")
     wishlists = []
+    # e.g., /wishlists?email=rudi@isawesome.com
     email = request.args.get("email")
+    # e.g., /wishlists?name=rudi
     name = request.args.get("name")
     if name:
         wishlists = Wishlist.find_by_name(name)
