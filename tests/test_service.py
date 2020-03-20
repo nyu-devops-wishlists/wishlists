@@ -93,6 +93,15 @@ class TestYourResourceServer(TestCase):
         data = resp.get_json()
         self.assertEqual(data["name"], test_wishlist["name"])
 
+    def test_delete_wishlist(self):
+        """ Delete an Account """
+        # get the id of an account
+        test_wishlist, resp = self._create_a_wishlist()
+        resp = self.app.delete(
+            "/wishlists/{}".format(test_wishlist["id"]), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
 
     def _create_a_wishlist(self):
         """ Factory that creates a wishlist on the server """

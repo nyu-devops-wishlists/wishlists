@@ -63,6 +63,21 @@ def get_wishlists(wishlist_id):
     return make_response(jsonify(wishlist.serialize()), status.HTTP_200_OK)
 
 ######################################################################
+# DELETE A WISHLIST
+######################################################################
+@app.route("/wishlists/<wishlist_id>", methods=["DELETE"])
+def delete_wishlists(wishlist_id):
+    """
+    Delete a Wishlist
+    This endpoint will delete a Wishlist based the id specified in the path
+    """
+    app.logger.info("Request to delete wishlist with id: %s", wishlist_id)
+    wishlist = Wishlist.find(wishlist_id)
+    if wishlist:
+        wishlist.delete()
+    return make_response("", status.HTTP_204_NO_CONTENT)
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
