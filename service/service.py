@@ -76,6 +76,8 @@ def delete_wishlists(wishlist_id):
     if wishlist:
         wishlist.delete()
     return make_response("", status.HTTP_204_NO_CONTENT)
+
+######################################################################
 # LIST ALL Wishlists (or query by name / email)
 ######################################################################
 @app.route("/wishlists", methods=["GET"])
@@ -96,6 +98,30 @@ def list_wishlists():
 
     results = [wishlist.serialize() for wishlist in wishlists]
     return make_response(jsonify(results), status.HTTP_200_OK)
+
+#---------------------------------------------------------------------
+#                A D D R E S S   M E T H O D S
+#---------------------------------------------------------------------
+
+######################################################################
+# ADD A NEW ITEM TO WISHLIST
+######################################################################
+
+#@app.route('/wishlists/<int:wishlist_id>/items', methods=['POST'])
+#def create_items(wishlist_id):
+    #"""
+    #Create an item in a Wishlist
+    #This endpoint will add an item to a wishlist
+    #"""
+    #app.logger.info("Request to add an item to the wishlist")
+    #check_content_type("application/json")
+    #wishlist = Wishlists.find_or_404(wishlist_id)
+    #item = Item()
+    #item.deserialize(request.get_json())
+    #wishlist.items.append(address)
+    #wishlist.save()
+    #message = item.serialize()
+    #return make_response(jsonify(message), status.HTTP_201_CREATED)
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
