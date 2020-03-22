@@ -127,15 +127,15 @@ class Wishlist(db.Model):
         logger.info("Processing name query for %s ...", name)
         return cls.query.filter(cls.name == name)
     
-    # @classmethod
-    # def find_by_id(cls, id):
-    #     """ Returns all Wishlist with the given id
+    @classmethod
+    def find_by_id(cls, id):
+        """ Returns all Wishlist with the given id
 
-    #     Args:
-    #         id (string): the id of the Wishlist you want to match
-    #     """
-    #     logger.info("Processing id query for %s ...", id)
-    #     return cls.query.filter(cls.id == id)
+        Args:
+            id (string): the id of the Wishlist you want to match
+        """
+        logger.info("Processing id query for %s ...", id)
+        return cls.query.filter(cls.id == id)
 
     @classmethod
     def find_by_email(cls, email):
