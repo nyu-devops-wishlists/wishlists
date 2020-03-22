@@ -155,3 +155,23 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(wishlists[0].shared_with2, "Thomas Chao")
         self.assertEqual(wishlists[0].shared_with3, "Isaias Martin")
 
+    def test_delete_a_wishlist(self):
+        """ Delete a wishlist from the database """
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+        wishlist = Wishlist(
+            name="Rudi's Wishlist",
+            email="rudi@stern.nyu.edu",
+            shared_with1="Becca Dailey",
+            shared_with2="Thomas Chao",
+            shared_with3="Isaias Martin"
+            )
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertEqual(wishlist.id, 1)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+        wishlist = wishlists[0]
+        wishlist.delete()
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 0)
