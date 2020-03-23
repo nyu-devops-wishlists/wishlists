@@ -13,11 +13,11 @@ class WishlistFactory(factory.Factory):
         model = Wishlist
 
     id = factory.Sequence(lambda n: n)
-    name = FuzzyChoice(choices=["Pratyush", "Cata", "Kevin", "Colin", "John","Rofrano"])
+    name = FuzzyChoice(choices=["Thomas", "Becca", "Bea", "Isaias", "Rudi", "John", "Rofrano"])
     email = FuzzyChoice(choices=["dog@stern.nyu.edu", "cat@stern.nyu.edu", "bird@stern.nyu.edu", "fish@stern.nyu.edu"])
-    shared_with1 = FuzzyChoice(choices=["Pratyush", "Cata", "Kevin", "Colin", "John","Rofrano"])
-    shared_with2 = FuzzyChoice(choices=["Pratyush", "Cata", "Kevin", "Colin", "John","Rofrano"])
-    shared_with3 = FuzzyChoice(choices=["Pratyush", "Cata", "Kevin", "Colin", "John","Rofrano"])
+    shared_with1 = FuzzyChoice(choices=["Thomas", "Becca", "Bea", "Isaias", "Rudi", "John", "Rofrano"])
+    shared_with2 = FuzzyChoice(choices=["Thomas", "Becca", "Bea", "Isaias", "Rudi", "John", "Rofrano"])
+    shared_with3 = FuzzyChoice(choices=["Thomas", "Becca", "Bea", "Isaias", "Rudi", "John", "Rofrano"])
 
 
 if __name__ == "__main__":
