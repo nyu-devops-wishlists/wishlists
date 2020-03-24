@@ -5,7 +5,7 @@ Test cases for Wishlist Model
 import logging
 import unittest
 import os
-from service.models import Wishlist, DataValidationError, db
+from service.models import Wishlist, Item, DataValidationError, db
 from service import app
 
 DATABASE_URI = os.getenv(
@@ -41,6 +41,37 @@ class TestWishlist(unittest.TestCase):
         """ This runs after each test """
         db.session.remove()
         db.drop_all()
+
+######################################################################
+#  H E L P E R   M E T H O D S
+######################################################################
+
+    #def _create_account(self, addresses=[]):
+        #""" Creates an account from a Factory """
+        #fake_account = AccountFactory()
+        #account = Account(
+            #name=fake_account.name, 
+            #email=fake_account.email, 
+            #phone_number=fake_account.phone_number, 
+            #date_joined=fake_account.date_joined,
+            #addresses=addresses
+        #)
+        #self.assertTrue(account != None)
+        #self.assertEqual(account.id, None)
+        #return account
+
+    #def _create_item(self):
+        #""" Creates fake item from factory """
+        #fake_item = ItemFactory()
+        #item = Item(
+            #name=fake_item.name, 
+            #sku=fake_item.sku, 
+            #description=fake_item.description, 
+            #quantity=fake_item.quantity 
+        #)
+        #self.assertTrue(item != None)
+        #self.assertEqual(item.id, None)
+        #return address
 
 ######################################################################
 #  P L A C E   T E S T   C A S E S   H E R E 
@@ -175,3 +206,52 @@ class TestWishlist(unittest.TestCase):
         wishlist.delete()
         wishlists = Wishlist.all()
         self.assertEqual(len(wishlists), 0)
+
+######################################################################
+#  ITEM   M O D E L   T E S T   C A S E S
+######################################################################
+class TestItem(unittest.TestCase):
+    """ Test Cases for Item Model """
+
+    @classmethod
+    def setUpClass(cls):
+        """ This runs once before the entire test suite """
+        app.config['TESTING'] = True
+        app.config['DEBUG'] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        app.logger.setLevel(logging.CRITICAL)
+        Item.init_db(app)
+
+    @classmethod
+    def tearDownClass(cls):
+        """ This runs once after the entire test suite """
+        pass
+
+    def setUp(self):
+        """ This runs before each test """
+        db.drop_all()  # clean up the last tests
+        db.create_all()  # make our sqlalchemy tables
+
+    def tearDown(self):
+        """ This runs after each test """
+        db.session.remove()
+        db.drop_all()
+
+######################################################################
+#  T E S T   C A S E S
+######################################################################
+
+    def test_create_an_item(self):
+        """ Create an Item and assert that it exists """
+        item = Item(
+            name="DevOps Final Grade", 
+            sku="A+", 
+            description="Final Grade for DevOps Class", 
+            quantity="5" 
+        )
+        self.assertTrue(item != None)
+        self.assertEqual(item.id, None)
+        self.assertEqual(item.name, "DevOps Final Grade")
+        self.assertEqual(item.sku, "A+")
+        self.assertEqual(item.description, "Final Grade for DevOps Class")
+        self.assertEqual(item.quantity, "5")

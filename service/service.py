@@ -13,7 +13,7 @@ from flask_api import status  # HTTP Status Codes
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
 from flask_sqlalchemy import SQLAlchemy
-from service.models import Wishlist, DataValidationError
+from service.models import Wishlist, Item, DataValidationError
 
 # Import Flask application
 from . import app
@@ -41,8 +41,7 @@ def create_wishlists():
     wishlist.deserialize(request.get_json())
     wishlist.create()
     message = wishlist.serialize()
-    #location_url = url_for("get_wishlist", wishlist_id=wishlist.id, _external=True)
-    location_url ="not imlemented"
+    location_url = url_for("get_wishlists", wishlist_id=wishlist.id, _external=True)
     return make_response(
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
@@ -76,6 +75,7 @@ def delete_wishlists(wishlist_id):
     if wishlist:
         wishlist.delete()
     return make_response("", status.HTTP_204_NO_CONTENT)
+
 ######################################################################
 # UPDATE AN EXISTING Wishlist
 ######################################################################
@@ -116,6 +116,31 @@ def list_wishlists():
 
     results = [wishlist.serialize() for wishlist in wishlists]
     return make_response(jsonify(results), status.HTTP_200_OK)
+
+#---------------------------------------------------------------------
+#                I T E M   M E T H O D S
+#---------------------------------------------------------------------
+
+######################################################################
+# ADD AN ITEM TO WISHLIST
+######################################################################
+
+@app.route('/wishlists/<int:wishlist_id>/items', methods=['POST'])
+def create_items(wishlist_id):
+    """
+    Create an item in a Wishlist
+
+    This endpoint will add an item to a wishlist
+    """
+    app.logger.info("Request to add an item to the wishlist")
+    check_content_type("application/json")
+    wishlist = Wishlist.find_or_404(wishlist_id)
+    item = Item()
+    item.deserialize(request.get_json())
+    wishlist.items.append(item)
+    wishlist.save()
+    message = item.serialize()
+    return make_response(jsonify(message), status.HTTP_201_CREATED)
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
