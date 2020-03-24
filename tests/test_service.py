@@ -10,7 +10,7 @@ import logging
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from flask_api import status  # HTTP Status Codes
-from service.models import db
+from service.models import Wishlist, Item, db
 from service.service import app, init_db
 from tests.factories import WishlistFactory
 
@@ -50,88 +50,8 @@ class TestYourResourceServer(TestCase):
         db.drop_all()
 
 ######################################################################
-#  P L A C E   T E S T   C A S E S   H E R E 
+#  H E L P E R   M E T H O D S
 ######################################################################
-
-    def test_index(self):
-        """ Test index call """
-        resp = self.app.get("/")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-    
-    
-    def test_create_wishlist(self):
-        """ Create a new wishlist """
-        test_wishlist, resp = self._create_a_wishlist()
-        
-        # Check the data is correct
-        new_wishlist = resp.get_json()
-        self.assertEqual(new_wishlist["name"], test_wishlist["name"], "Names do not match")
-        self.assertEqual(new_wishlist["email"], test_wishlist["email"], "email do not match")
-        self.assertEqual(new_wishlist["shared_with1"], test_wishlist["shared_with1"], "shared_with1 do not match")
-        self.assertEqual(new_wishlist["shared_with2"], test_wishlist["shared_with2"], "shared_with2 do not match")
-        self.assertEqual(new_wishlist["shared_with3"], test_wishlist["shared_with3"], "shared_with3 do not match")
-
-        
-        # Check that the location header was correct
-        resp = self.app.get(location, content_type="application/json")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        new_wishlist = resp.get_json()
-        new_wishlist = resp.get_json()
-        self.assertEqual(new_wishlist["name"], test_wishlist["name"], "Names do not match")
-        self.assertEqual(new_wishlist["email"], test_wishlist["email"], "email do not match")
-        self.assertEqual(new_wishlist["shared_with1"], test_wishlist["shared_with1"], "shared_with1 do not match")
-        self.assertEqual(new_wishlist["shared_with2"], test_wishlist["shared_with2"], "shared_with2 do not match")
-        self.assertEqual(new_wishlist["shared_with3"], test_wishlist["shared_with3"], "shared_with3 do not match")
-
-    def test_get_wishlist_by_id(self):
-        """ Get a single Wishlist by id """
-        # get the id of a wishlist
-        test_wishlist, resp = self._create_a_wishlist()
-        resp = self.app.get(
-            "/wishlists/{}".format(test_wishlist["id"]), content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()
-        self.assertEqual(data["name"], test_wishlist["name"])
-
-    def test_delete_wishlist(self):
-        """ Delete a Wishlist """
-        # get the id of a wishlist
-        test_wishlist, resp = self._create_a_wishlist()
-        resp = self.app.delete(
-            "/wishlists/{}".format(test_wishlist["id"]), 
-            content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
-
-    def _create_a_wishlist(self):
-        """ Factory that creates a wishlist on the server """
-        test_wishlist = {
-            "name": "Rudi's wishlist",
-            "email": "rudi@stern.nyu.edu",
-            "shared_with1": "Rebecca Dailey",
-            "shared_with2": "Thomas Chao",
-            "shared_with3": "Isaias Martin"
-        }
-        resp = self.app.post(
-            "/wishlists",
-            json=test_wishlist,
-            content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        new_wishlist = resp.get_json()
-        logging.debug(new_wishlist)
-        test_wishlist["id"] = new_wishlist["id"]
-        return test_wishlist, resp
-
-
-    def test_get_wishlist_list(self):
-        """ Get a list of Wishlist """
-        self._create_wishlists(5)
-        resp = self.app.get("/wishlists")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        data = resp.get_json()
-        self.assertEqual(len(data), 5)
 
     def _create_wishlists(self, count):
         """ Factory method to create pets in bulk """
@@ -168,7 +88,101 @@ class TestYourResourceServer(TestCase):
         new_wishlist = resp.get_json()
         logging.debug(new_wishlist)
         test_wishlist["id"] = new_wishlist["id"]
-        return test_wishlist, resp
+        return test_wishlist, resp   
+
+######################################################################
+#  W I S H L I S T   T E S T   C A S E S   H E R E 
+######################################################################
+
+    def test_index(self):
+        """ Test index call """
+        resp = self.app.get("/")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+    
+    def test_create_wishlist(self):
+        """ Create a new wishlist """
+        wishlist = WishlistFactory()
+        resp = self.app.post(
+            "/wishlists", 
+            json=wishlist.serialize(), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        
+        # Make sure location header is set
+        location = resp.headers.get("Location", None)
+        self.assertIsNotNone(location)
+        logging.debug("Location header: %s", location)
+
+        # Check the data is correct
+        new_wishlist = resp.get_json()
+        self.assertEqual(new_wishlist["name"], wishlist.name, "Names do not match")
+        self.assertEqual(new_wishlist["email"], wishlist.email, "email do not match")
+        self.assertEqual(new_wishlist["shared_with1"], wishlist.shared_with1, "shared_with1 do not match")
+        self.assertEqual(new_wishlist["shared_with2"], wishlist.shared_with2, "shared_with2 do not match")
+        self.assertEqual(new_wishlist["shared_with3"], wishlist.shared_with3, "shared_with3 do not match")
+  
+        # Check that the location header was correct
+        resp = self.app.get(location, content_type="application/json")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        new_wishlist = resp.get_json()
+        self.assertEqual(new_wishlist["name"], wishlist.name, "Names do not match")
+        self.assertEqual(new_wishlist["email"], wishlist.email, "email do not match")
+        self.assertEqual(new_wishlist["shared_with1"], wishlist.shared_with1, "shared_with1 do not match")
+        self.assertEqual(new_wishlist["shared_with2"], wishlist.shared_with2, "shared_with2 do not match")
+        self.assertEqual(new_wishlist["shared_with3"], wishlist.shared_with3, "shared_with3 do not match")
+
+    def test_get_wishlist_by_id(self):
+        """ Get a single Wishlist by id """
+        # get the id of a wishlist
+        test_wishlist, resp = self._create_a_wishlist()
+        resp = self.app.get(
+            "/wishlists/{}".format(test_wishlist["id"]), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data["name"], test_wishlist["name"])
+
+    def test_delete_wishlist(self):
+        """ Delete a Wishlist """
+        # get the id of a wishlist
+        test_wishlist, resp = self._create_a_wishlist()
+        resp = self.app.delete(
+            "/wishlists/{}".format(test_wishlist["id"]), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_get_wishlist_list(self):
+        """ Get a list of Wishlist """
+        self._create_wishlists(5)
+        resp = self.app.get("/wishlists")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 5)
+
+    def test_update_wishlist(self):
+        """ Update an existing wishlist """
+        # create a wishlist to update
+        test_wishlist = WishlistFactory()
+        resp = self.app.post(
+            "/wishlists", 
+            json=test_wishlist.serialize(), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # update the pet
+        new_wishlist = resp.get_json()
+        new_wishlist["name"] = "Updated Wishlist"
+        resp = self.app.put(
+            "/wishlists/{}".format(new_wishlist["id"]),
+            json=new_wishlist,
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_wishlist = resp.get_json()
+        self.assertEqual(updated_wishlist["name"], "Updated Wishlist")
 
     def test_get_wishlist(self):
         """ Get a single Wishlist """
@@ -186,7 +200,7 @@ class TestYourResourceServer(TestCase):
 ######################################################################
     def test_add_item(self):
         """ Add an item to a wishlist """
-        wishlist = self._create_a_wishlist(1)[0]
+        wishlist = self._create_wishlists(1)[0]
         item = Item(
             name="DevOps Final Grade", 
             sku="A+", 

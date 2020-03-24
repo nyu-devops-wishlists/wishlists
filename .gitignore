@@ -102,3 +102,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Unittests
+coverage.xml
+unittests.xml

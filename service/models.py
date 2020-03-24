@@ -30,6 +30,7 @@ class Wishlist(db.Model):
     shared_with1 = db.Column(db.String(63))
     shared_with2 = db.Column(db.String(63))
     shared_with3 = db.Column(db.String(63))
+    items = db.relationship('Item', backref='wishlist', lazy=True)
 
     def __repr__(self):
         return "<Wishlist %r id=[%s]>" % (self.name, self.id)
