@@ -13,6 +13,7 @@ from flask_api import status  # HTTP Status Codes
 from service.models import Wishlist, Item, db
 from service.service import app, init_db
 from tests.factories import WishlistFactory
+from tests.factories import ItemFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
@@ -244,3 +245,46 @@ class TestYourResourceServer(TestCase):
         data = resp.get_json()
         logging.debug(data)
         item_id = data["id"]
+
+    def test_update_item(self):
+        """ Update an item in a wishlist """
+        # create a known item
+        wishlist = self._create_wishlists(1)[0]
+        item = Item(
+            name="DevOps Final Grade", 
+            sku="A+", 
+            description="Final Grade for DevOps Class", 
+            quantity="5"
+        )
+        resp = self.app.post(
+            "/wishlists/{}/items".format(wishlist.id), 
+            json=item.serialize(), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        data = resp.get_json()
+        logging.debug(data)
+        item_id = data["id"]
+        data["quantity"] = "XX"
+
+        # send the update back
+        resp = self.app.put(
+            "/wishlists/{}/items/{}".format(wishlist.id, item_id), 
+            json=data, 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        # retrieve it back
+        resp = self.app.get(
+            "/wishlists/{}/items/{}".format(wishlist.id, item_id), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        logging.debug(data)
+        self.assertEqual(data["id"], item_id)
+        self.assertEqual(data["wishlist_id"], wishlist.id)
+        self.assertEqual(data["quantity"], "XX")

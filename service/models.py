@@ -194,12 +194,19 @@ class Item(db.Model):
             self.description = data["description"]
             self.quantity = data["quantity"]
         except KeyError as error:
-            raise DataValidationError("Invalid Address: missing " + error.args[0])
+            raise DataValidationError("Invalid Item: missing " + error.args[0])
         except TypeError as error:
             raise DataValidationError(
-                "Invalid Address: body of request contained" "bad or no data"
+                "Invalid Item: body of request contained" "bad or no data"
             )
         return self
+    
+    def save(self):
+        """
+        Updates a Wishlist to the database
+        """
+        logger.info("Saving %s", self.name)
+        db.session.commit()
 
     @classmethod
     def init_db(cls, app):
