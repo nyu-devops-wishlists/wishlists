@@ -143,6 +143,20 @@ def create_items(wishlist_id):
     return make_response(jsonify(message), status.HTTP_201_CREATED)
 
 ######################################################################
+# RETRIEVE AN ITEM FROM WISHLIST
+######################################################################
+@app.route('/wishlists/<int:wishlist_id>/items/<int:item_id>', methods=['GET'])
+def get_items(wishlist_id, item_id):
+    """
+    Get an item
+    This endpoint returns just an item
+    """
+    app.logger.info("Request to get an item with id: %s", item_id)
+    item = Item.find_or_404(item_id)
+    return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 

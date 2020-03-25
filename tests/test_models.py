@@ -7,6 +7,7 @@ import unittest
 import os
 from service.models import Wishlist, Item, DataValidationError, db
 from service import app
+from tests.factories import WishlistFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
@@ -43,37 +44,6 @@ class TestWishlist(unittest.TestCase):
         db.drop_all()
 
 ######################################################################
-#  H E L P E R   M E T H O D S
-######################################################################
-
-    #def _create_account(self, addresses=[]):
-        #""" Creates an account from a Factory """
-        #fake_account = AccountFactory()
-        #account = Account(
-            #name=fake_account.name, 
-            #email=fake_account.email, 
-            #phone_number=fake_account.phone_number, 
-            #date_joined=fake_account.date_joined,
-            #addresses=addresses
-        #)
-        #self.assertTrue(account != None)
-        #self.assertEqual(account.id, None)
-        #return account
-
-    #def _create_item(self):
-        #""" Creates fake item from factory """
-        #fake_item = ItemFactory()
-        #item = Item(
-            #name=fake_item.name, 
-            #sku=fake_item.sku, 
-            #description=fake_item.description, 
-            #quantity=fake_item.quantity 
-        #)
-        #self.assertTrue(item != None)
-        #self.assertEqual(item.id, None)
-        #return address
-
-######################################################################
 #  P L A C E   T E S T   C A S E S   H E R E 
 ######################################################################
 
@@ -86,7 +56,6 @@ class TestWishlist(unittest.TestCase):
             shared_with2="Thomas Chao",
             shared_with3="Isaias Martin"
         )
-
 
         self.assertTrue(wishlist != None)
         self.assertEqual(wishlist.id, None)
@@ -208,7 +177,7 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(len(wishlists), 0)
 
 ######################################################################
-#  ITEM   M O D E L   T E S T   C A S E S
+#  I T E M   M O D E L   T E S T   C A S E S
 ######################################################################
 class TestItem(unittest.TestCase):
     """ Test Cases for Item Model """
@@ -255,3 +224,52 @@ class TestItem(unittest.TestCase):
         self.assertEqual(item.sku, "A+")
         self.assertEqual(item.description, "Final Grade for DevOps Class")
         self.assertEqual(item.quantity, "5")
+
+    def test_find_or_404(self):
+        """ Find item or throw 404 error """
+        wishlist = _create_wishlist()
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertEqual(wishlist.id, 1)
+
+        # Fetch it back
+        wishlist = Wishlist.find_or_404(wishlist.id)
+        self.assertEqual(wishlist.id, 1)
+
+    def test_find_by_name(self):
+        """ Find item by name """
+        wishlist = _create_wishlist()
+        wishlist.create()
+
+        # Fetch it back by name
+        same_wishlist = Wishlist.find_by_name(wishlist.name)[0]
+        self.assertEqual(same_wishlist.id, wishlist.id)
+        self.assertEqual(same_wishlist.name, wishlist.name)
+
+######################################################################
+#  H E L P E R   M E T H O D S
+######################################################################
+
+def _create_wishlist(items=[]):
+    """ Creates a wishlist from a Factory """
+    fake_wishlist = WishlistFactory()
+    wishlist = Wishlist(
+        name=fake_wishlist.name, 
+        email=fake_wishlist.email, 
+        # phone_number=fake_account.phone_number, 
+        # date_joined=fake_account.date_joined,
+        items=items
+    )
+    return wishlist
+
+### TODO: uncomment when ItemFactory created
+# def _create_item():
+#     """ Creates fake item from factory """
+#     fake_item = ItemFactory()
+#     item = Item(
+#         name=fake_item.name, 
+#         sku=fake_item.sku, 
+#         description=fake_item.description, 
+#         quantity=fake_item.quantity 
+#     )
+#     return item

@@ -54,7 +54,7 @@ class TestYourResourceServer(TestCase):
 ######################################################################
 
     def _create_wishlists(self, count):
-        """ Factory method to create pets in bulk """
+        """ Factory method to create wishlists in bulk """
         wishlists = []
         for _ in range(count):
             test_wishlist = WishlistFactory()
@@ -220,3 +220,27 @@ class TestYourResourceServer(TestCase):
         self.assertEqual(data["sku"], item.sku)
         self.assertEqual(data["description"], item.description)
         self.assertEqual(data["quantity"], item.quantity)
+
+
+    def test_get_item(self):
+        """ Get an item from a wishlist """
+        # create a known item
+        wishlist = self._create_wishlists(1)[0]
+        item = Item(
+            name="DevOps Final Grade", 
+            sku="A+", 
+            description="Final Grade for DevOps Class", 
+            quantity="5" 
+        )
+        resp = self.app.post(
+            "/wishlists/{}/items".format(wishlist.id), 
+            json=item.serialize(), 
+            content_type="application/json"
+        )
+
+        # retrieve it back
+
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        data = resp.get_json()
+        logging.debug(data)
+        item_id = data["id"]
