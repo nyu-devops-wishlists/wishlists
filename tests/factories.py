@@ -7,7 +7,7 @@ from service.models import Wishlist
 
 
 class WishlistFactory(factory.Factory):
-    """ Creates fake pets that you don't have to feed """
+    """ Creates wishlists for testing """
 
     class Meta:
         model = Wishlist
