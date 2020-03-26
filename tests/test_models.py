@@ -8,13 +8,14 @@ import os
 from service.models import Wishlist, Item, DataValidationError, db
 from service import app
 from tests.factories import WishlistFactory
+from tests.factories import ItemFactory
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
 )
 
 ######################################################################
-#  WISHLIST M O D E L   T E S T   C A S E S
+#  W I S H L I S T    M O D E L   T E S T   C A S E S
 ######################################################################
 class TestWishlist(unittest.TestCase):
     """ Test Cases for Wishlist Model """
@@ -104,7 +105,7 @@ class TestWishlist(unittest.TestCase):
 
         # make sure they got saved
         self.assertEqual(len(Wishlist.all()), 1)
-        # find the 2nd pet in the list
+        # find the 2nd wishlist in the list
         wishlist = Wishlist.find(expected_wishlist.id)
         self.assertIsNot(wishlist, None)
         self.assertEqual(wishlist.id, expected_wishlist.id)
@@ -246,6 +247,33 @@ class TestItem(unittest.TestCase):
         self.assertEqual(same_wishlist.id, wishlist.id)
         self.assertEqual(same_wishlist.name, wishlist.name)
 
+    def test_update_item(self):
+        """ Update an item in wishlist """
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+
+        item = _create_item()
+        wishlist = _create_wishlist(items=[item])
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertEqual(wishlist.id, 1)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+
+        # Fetch it back
+        wishlist = Wishlist.find(wishlist.id)
+        old_item = wishlist.items[0]
+        self.assertEqual(old_item.quantity, item.quantity)
+
+        old_item.quantity = "XX"
+        wishlist.save()
+
+        # Fetch it back again
+        wishlist = Wishlist.find(wishlist.id)
+        item = wishlist.items[0]
+        self.assertEqual(item.quantity, "XX")
+
+
 ######################################################################
 #  H E L P E R   M E T H O D S
 ######################################################################
@@ -263,13 +291,14 @@ def _create_wishlist(items=[]):
     return wishlist
 
 ### TODO: uncomment when ItemFactory created
-# def _create_item():
-#     """ Creates fake item from factory """
-#     fake_item = ItemFactory()
-#     item = Item(
-#         name=fake_item.name, 
-#         sku=fake_item.sku, 
-#         description=fake_item.description, 
-#         quantity=fake_item.quantity 
-#     )
-#     return item
+def _create_item():
+    """ Creates fake item from factory """
+    fake_item = ItemFactory()
+    item = Item(
+        name=fake_item.name, 
+        sku=fake_item.sku, 
+        description=fake_item.description, 
+        quantity=fake_item.quantity 
+    )
+    return item
+
