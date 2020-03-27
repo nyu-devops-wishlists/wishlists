@@ -172,6 +172,20 @@ def update_items(wishlist_id, item_id):
     
     return make_response(jsonify(item.serialize()), status.HTTP_200_OK)
 
+######################################################################
+# DELETE AN ITEM
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>/items/<int:item_id>", methods=["DELETE"])
+def delete_item(wishlist_id, item_id):
+    """
+    Delete an Item
+    This endpoint will delete an Item based the id specified in the path
+    """
+    app.logger.info("Request to delete item with id: %s", item_id)
+    item = Item.find(item_id)
+    if item:
+        item.delete()
+    return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
