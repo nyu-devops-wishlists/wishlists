@@ -188,6 +188,18 @@ def delete_item(wishlist_id, item_id):
     return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
+# LIST ITEMS
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>/items", methods=["GET"])
+def list_items(wishlist_id):
+    """ Returns all of the items in a wishlist """
+    app.logger.info("Request for wishlist items...")
+    wishlist = Wishlist.find_or_404(wishlist_id)
+    results = [item.serialize() for item in wishlist.items]
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
