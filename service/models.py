@@ -164,11 +164,16 @@ class Item(db.Model):
     description = db.Column(db.String(64))
     quantity = db.Column(db.String(2))
 
+    #def __repr__(self):
+    #    return "<Address %r id=[%s] account[%s]>" % (self.name, self.id, self.account_id)
+
+    #def __str__(self):
+    #    return "%s: %s, %s, %s %s" % (self.name, self.street, self.city, self.state, self.postalcode)
     def __repr__(self):
-        return "<Address %r id=[%s] account[%s]>" % (self.name, self.id, self.account_id)
+        return "<Item %r id=[%s] wishlist[%s]>" % (self.name, self.id, self.wishlist_id)
 
     def __str__(self):
-        return "%s: %s, %s, %s %s" % (self.name, self.street, self.city, self.state, self.postalcode)
+        return "%s: %s, %s, %s " % (self.name, self.sku, self.description, self.quantity)
 
     def serialize(self):
         """ Serializes a Address into a dictionary """
@@ -206,6 +211,12 @@ class Item(db.Model):
         Updates a Wishlist to the database
         """
         logger.info("Saving %s", self.name)
+        db.session.commit()
+    
+    def delete(self):
+        """ Removes a Item from the data store """
+        logger.info("Deleting %s", self.name)
+        db.session.delete(self)
         db.session.commit()
 
     @classmethod
