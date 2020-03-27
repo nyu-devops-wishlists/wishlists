@@ -164,11 +164,6 @@ class Item(db.Model):
     description = db.Column(db.String(64))
     quantity = db.Column(db.String(2))
 
-    #def __repr__(self):
-    #    return "<Address %r id=[%s] account[%s]>" % (self.name, self.id, self.account_id)
-
-    #def __str__(self):
-    #    return "%s: %s, %s, %s %s" % (self.name, self.street, self.city, self.state, self.postalcode)
     def __repr__(self):
         return "<Item %r id=[%s] wishlist[%s]>" % (self.name, self.id, self.wishlist_id)
 
