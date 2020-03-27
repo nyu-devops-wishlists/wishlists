@@ -198,7 +198,7 @@ class TestWishlist(unittest.TestCase):
 ######################################################################
 class TestItem(unittest.TestCase):
     """ Test Cases for Item Model """
-
+    
     @classmethod
     def setUpClass(cls):
         """ This runs once before the entire test suite """
@@ -289,6 +289,29 @@ class TestItem(unittest.TestCase):
         item = wishlist.items[0]
         self.assertEqual(item.quantity, "XX")
 
+    #@classmethod
+    def test_delete_account_item(self):
+        """ Delete an accounts item """
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+
+        item = _create_item()
+        wishlist = _create_wishlist(items=[item])
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertEqual(wishlist.id, 1)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+
+        # Fetch it back
+        wishlist = Wishlist.find(wishlist.id)
+        item = wishlist.items[0]
+        item.delete()
+        wishlist.save()
+
+        # Fetch it back again
+        wishlist = Wishlist.find(wishlist.id)
+        self.assertEqual(len(wishlist.items), 0)
 
 ######################################################################
 #  H E L P E R   M E T H O D S
@@ -317,4 +340,6 @@ def _create_item():
         quantity=fake_item.quantity 
     )
     return item
+
+
 
