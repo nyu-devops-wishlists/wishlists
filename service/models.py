@@ -162,7 +162,7 @@ class Item(db.Model):
     name = db.Column(db.String(64)) # e.g., toothbrush, book, phone
     sku = db.Column(db.String(64))
     description = db.Column(db.String(64))
-    quantity = db.Column(db.String(2))
+    quantity = db.Column(db.String(64))
 
     def __repr__(self):
         return "<Item %r id=[%s] wishlist[%s]>" % (self.name, self.id, self.wishlist_id)
