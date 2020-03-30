@@ -30,6 +30,7 @@ class Wishlist(db.Model):
     shared_with1 = db.Column(db.String(63))
     shared_with2 = db.Column(db.String(63))
     shared_with3 = db.Column(db.String(63))
+    shared = db.Column(db.Boolean, default_value=False)
     items = db.relationship('Item', backref='wishlist', lazy=True)
 
     def __repr__(self):
@@ -65,7 +66,8 @@ class Wishlist(db.Model):
             "email": self.email,
             "shared_with1":self.shared_with1,
             "shared_with2":self.shared_with2,
-            "shared_with3":self.shared_with3
+            "shared_with3":self.shared_with3,
+            "shared":self.shared,
         }
 
     def deserialize(self, data):
@@ -82,6 +84,8 @@ class Wishlist(db.Model):
             self.shared_with1 = data["shared_with1"]
             self.shared_with2 = data["shared_with2"]
             self.shared_with3 = data["shared_with3"]
+            self.shared = data["shared"]
+
         except KeyError as error:
             raise DataValidationError("Invalid Wishlist: missing " + error.args[0])
         except TypeError as error:
