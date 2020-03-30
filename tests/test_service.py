@@ -372,3 +372,36 @@ class TestYourResourceServer(TestCase):
 
         data = resp.get_json()
         self.assertEqual(len(data), 2)
+
+
+    def test_get_item_list_by_name(self):
+        """ Get a single Item by name """
+        # get the name of an item
+        
+        # add two items to wishlist
+        wishlist = self._create_wishlists(1)[0]
+        item_list = ItemFactory.create_batch(2)
+
+        # Create item 1
+        resp = self.app.post(
+            "/wishlists/{}/items".format(wishlist.id), 
+            json=item_list[0].serialize(), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # Create item 2
+        resp = self.app.post(
+            "/wishlists/{}/items".format(wishlist.id), 
+            json=item_list[1].serialize(), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        name=item_list[1].name
+        # get the item names back
+        resp = self.app.get('/wishlists/{}/items?name={}'.format(wishlist.id, name))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        
+        data = resp.get_json()
+        self.assertEqual(len(data), 1)
