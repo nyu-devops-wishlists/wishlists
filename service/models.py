@@ -59,13 +59,18 @@ class Wishlist(db.Model):
 
     def serialize(self):
         """ Serializes a Wishlist into a dictionary """
+        items = []
+        for i in self.items:
+            items.append(i.serialize())
+
         return {
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "shared_with1":self.shared_with1,
-            "shared_with2":self.shared_with2,
-            "shared_with3":self.shared_with3
+            "shared_with1": self.shared_with1,
+            "shared_with2": self.shared_with2,
+            "shared_with3": self.shared_with3,
+            "items": items
         }
 
     def deserialize(self, data):
@@ -171,7 +176,7 @@ class Item(db.Model):
         return "%s: %s, %s, %s " % (self.name, self.sku, self.description, self.quantity)
 
     def serialize(self):
-        """ Serializes a Address into a dictionary """
+        """ Serializes an Item into a dictionary """
         return {
             "id": self.id,
             "wishlist_id": self.wishlist_id,
@@ -183,7 +188,7 @@ class Item(db.Model):
 
     def deserialize(self, data):
         """
-        Deserializes a Address from a dictionary
+        Deserializes an Item from a dictionary
         Args:
             data (dict): A dictionary containing the resource data
         """
