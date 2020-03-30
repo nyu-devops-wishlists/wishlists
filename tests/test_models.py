@@ -256,6 +256,24 @@ class TestWishlist(unittest.TestCase):
         wishlists = Wishlist.all()
         self.assertEqual(len(wishlists), 0)
 
+    def test_share_wishlist(self):
+        """ Share a wishlist """
+        wishlist = _create_wishlist()
+        wishlist.shared = False
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database with shared value 'False'
+        self.assertEqual(wishlist.id, 1)
+        self.assertEqual(wishlist.shared, False)
+ 
+        # Fetch it back
+        wishlist = Wishlist.find(wishlist.id)
+        wishlist.shared = not wishlist.shared
+        wishlist.save()
+
+        # Fetch it back again
+        wishlist = Wishlist.find(wishlist.id)
+        self.assertEqual(wishlist.shared, True)
+        
 ######################################################################
 #  I T E M   M O D E L   T E S T   C A S E S
 ######################################################################
@@ -380,14 +398,27 @@ class TestItem(unittest.TestCase):
 #  H E L P E R   M E T H O D S
 ######################################################################
 
+def _create_item():
+    """ Creates fake item from factory """
+    fake_item = ItemFactory()
+    item = Item(
+        name=fake_item.name, 
+        sku=fake_item.sku, 
+        description=fake_item.description, 
+        quantity=fake_item.quantity 
+    )
+    return item
+
 def _create_wishlist(items=[]):
     """ Creates a wishlist from a Factory """
     fake_wishlist = WishlistFactory()
     wishlist = Wishlist(
         name=fake_wishlist.name, 
         email=fake_wishlist.email, 
-        # phone_number=fake_account.phone_number, 
-        # date_joined=fake_account.date_joined,
+        shared_with1=fake_wishlist.shared_with1, 
+        shared_with2=fake_wishlist.shared_with2,
+        shared_with3=fake_wishlist.shared_with3,
+        shared=fake_wishlist.shared,
         items=items
     )
 
@@ -407,6 +438,3 @@ def _create_item():
         quantity=fake_item.quantity 
     )
     return item
-
-
-

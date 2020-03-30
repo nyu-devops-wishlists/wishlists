@@ -78,7 +78,8 @@ class TestYourResourceServer(TestCase):
             "email": "rudi@stern.nyu.edu",
             "shared_with1": "Rebecca Dailey",
             "shared_with2": "Thomas Chao",
-            "shared_with3": "Isaias Martin"
+            "shared_with3": "Isaias Martin",
+            "shared": False
         }
         resp = self.app.post(
             "/wishlists",
@@ -173,7 +174,7 @@ class TestYourResourceServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
-        # update the pet
+        # update the wishlist
         new_wishlist = resp.get_json()
         new_wishlist["name"] = "Updated Wishlist"
         resp = self.app.put(
@@ -195,6 +196,28 @@ class TestYourResourceServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data["name"], test_wishlist["name"])
+
+    def test_share_wishlist(self):
+        # create a wishlist to update
+        wishlist = self._create_wishlists(1)[0]
+        wishlist.shared = False
+        resp = self.app.post(
+            "/wishlists",
+            json=wishlist.serialize(), 
+            content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        #update the shared status
+        shared_wishlist = resp.get_json()
+        resp = self.app.put(
+            "/wishlists/{}/shared".format(shared_wishlist["id"]),
+            json=shared_wishlist,
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_wishlist = resp.get_json()
+        self.assertEqual(updated_wishlist["shared"], True)
 
 ######################################################################
 #  I T E M   T E S T   C A S E S   H E R E 

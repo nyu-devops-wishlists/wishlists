@@ -117,6 +117,22 @@ def list_wishlists():
     results = [wishlist.serialize() for wishlist in wishlists]
     return make_response(jsonify(results), status.HTTP_200_OK)
 
+######################################################################
+# SHARE A WISHTLIST
+######################################################################
+@app.route("/wishlists/<int:wishlist_id>/shared", methods=["PUT"])
+def share_wishlist(wishlist_id):
+    """
+    Switch the "share" status of a wishlist from 0 to 1
+    """
+    app.logger.info("Request to share wishlist with id: %s", wishlist_id)
+    check_content_type("application/json")
+    wishlist = Wishlist.find_or_404(wishlist_id)
+    wishlist.shared = not wishlist.shared
+    wishlist.save()
+    message = wishlist.serialize()
+    return make_response(jsonify(message), status.HTTP_200_OK)
+
 #---------------------------------------------------------------------
 #                I T E M   M E T H O D S
 #---------------------------------------------------------------------
