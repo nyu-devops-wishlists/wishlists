@@ -86,6 +86,57 @@ class TestWishlist(unittest.TestCase):
         wishlists = Wishlist.all()
         self.assertEqual(len(wishlists), 1)
     
+    def test_serialize_a_wishlist(self):
+        """ Serialize a wishlist """
+        item = _create_item()
+        wishlist = _create_wishlist(items=[item])
+        serial_wishlist = wishlist.serialize()
+        self.assertEqual(serial_wishlist['id'], wishlist.id)
+        self.assertEqual(serial_wishlist['name'], wishlist.name)
+        self.assertEqual(serial_wishlist['email'], wishlist.email)
+
+        print("SERIAL_WISHLIST: ", serial_wishlist)
+
+        self.assertEqual(len(serial_wishlist['items']), 1)
+        items = serial_wishlist['items']
+        self.assertEqual(items[0]['id'], item.id)
+        self.assertEqual(items[0]['wishlist_id'], item.wishlist_id)
+        self.assertEqual(items[0]['name'], item.name)
+        self.assertEqual(items[0]['sku'], item.sku)
+        self.assertEqual(items[0]['description'], item.description)
+        self.assertEqual(items[0]['quantity'], item.quantity)
+
+    def test_deserialize_a_wishlist(self):
+        """ Deserialize a wishlist """
+        item = _create_item()
+        wishlist = _create_wishlist(items=[item])
+        serial_wishlist = wishlist.serialize()
+        new_wishlist = Wishlist()
+        new_wishlist.deserialize(serial_wishlist)
+        self.assertEqual(new_wishlist.id, wishlist.id)
+        self.assertEqual(new_wishlist.name, wishlist.name)
+        self.assertEqual(new_wishlist.email, wishlist.email)
+
+    def test_deserialize_wishlist_key_error(self):
+        """ Deserialize a wishlist with a KeyError """
+        wishlist = Wishlist()
+        self.assertRaises(DataValidationError, wishlist.deserialize, {})
+
+    def test_deserialize_wishlist_type_error(self):
+        """ Deserialize a wishlist with a TypeError """
+        wishlist = Wishlist()
+        self.assertRaises(DataValidationError, wishlist.deserialize, [])
+
+    def test_deserialize_item_key_error(self):
+        """ Deserialize an item with a KeyError """
+        item = Item()
+        self.assertRaises(DataValidationError, item.deserialize, {})
+
+    def test_deserialize_item_type_error(self):
+        """ Deserialize an item with a TypeError """
+        item = Item()
+        self.assertRaises(DataValidationError, item.deserialize, [])
+
     def test_update_wishlist(self):
         """ Update a wishlist """
         wishlist = _create_wishlist()
@@ -172,6 +223,18 @@ class TestWishlist(unittest.TestCase):
         self.assertEqual(wishlists[0].shared_with2, "Thomas Chao")
         self.assertEqual(wishlists[0].shared_with3, "Isaias Martin")
 
+    def test_find_or_404(self):
+        """ Find or throw 404 error """
+        wishlist = _create_wishlist()
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertEqual(wishlist.id, 1)
+
+        # Fetch it back
+        wishlist = Wishlist.find_or_404(wishlist.id)
+        self.assertEqual(wishlist.id, 1)
+
+
     def test_delete_a_wishlist(self):
         """ Delete a wishlist from the database """
         wishlists = Wishlist.all()
@@ -216,7 +279,7 @@ class TestWishlist(unittest.TestCase):
 ######################################################################
 class TestItem(unittest.TestCase):
     """ Test Cases for Item Model """
-
+    
     @classmethod
     def setUpClass(cls):
         """ This runs once before the entire test suite """
@@ -307,6 +370,29 @@ class TestItem(unittest.TestCase):
         item = wishlist.items[0]
         self.assertEqual(item.quantity, "XX")
 
+    #@classmethod
+    def test_delete_wishlist_item(self):
+        """ Delete an item from wishlist """
+        wishlists = Wishlist.all()
+        self.assertEqual(wishlists, [])
+
+        item = _create_item()
+        wishlist = _create_wishlist(items=[item])
+        wishlist.create()
+        # Assert that it was assigned an id and shows up in the database
+        self.assertEqual(wishlist.id, 1)
+        wishlists = Wishlist.all()
+        self.assertEqual(len(wishlists), 1)
+
+        # Fetch it back
+        wishlist = Wishlist.find(wishlist.id)
+        item = wishlist.items[0]
+        item.delete()
+        wishlist.save()
+
+        # Fetch it back again
+        wishlist = Wishlist.find(wishlist.id)
+        self.assertEqual(len(wishlist.items), 0)
 
 ######################################################################
 #  H E L P E R   M E T H O D S
@@ -335,8 +421,20 @@ def _create_wishlist(items=[]):
         shared=fake_wishlist.shared,
         items=items
     )
+
+    # Item in a wishlist should get the wishlist ID
+    for i in items:
+        i.wishlist_id = wishlist.id
+    
     return wishlist
 
-### TODO: uncomment when ItemFactory created
-
-
+def _create_item():
+    """ Creates fake item from factory """
+    fake_item = ItemFactory()
+    item = Item(
+        name=fake_item.name, 
+        sku=fake_item.sku, 
+        description=fake_item.description, 
+        quantity=fake_item.quantity 
+    )
+    return item
