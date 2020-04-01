@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/rudi116/lab-travis-ci.svg?branch=master)](https://travis-ci.org/rudi116/lab-travis-ci)
+[![Codecov](https://img.shields.io/codecov/c/github/nyu-devops/lab-travis-ci.svg)]()
 
 # Wishlists
 
