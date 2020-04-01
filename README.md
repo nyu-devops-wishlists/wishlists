@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/rudi116/lab-travis-ci.svg?branch=master)](https://travis-ci.org/rudi116/lab-travis-ci)
+
 # Wishlists
 
 This repository contains documentation for creating a wishlist microservice as part of building an e-commerce website. All documentation is created and maintained by the wishlist squad members.
