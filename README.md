@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rudi116/lab-travis-ci.svg?branch=master)](https://travis-ci.org/rudi116/lab-travis-ci)
+[![Build Status](https://travis-ci.org/nyu-devops-wishlists/wishlists.svg?branch=master)](https://travis-ci.org/nyu-devops-wishlists/wishlists)
 
 # Wishlists
 
