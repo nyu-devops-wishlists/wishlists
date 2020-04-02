@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/nyu-devops-wishlists/wishlists.svg?branch=master)](https://travis-ci.org/nyu-devops-wishlists/wishlists)
+[![codecov](https://codecov.io/gh/nyu-devops-wishlists/lab-travis-ci/branch/master/graph/badge.svg)](https://codecov.io/gh/nyu-devops-wishlists/lab-travis-ci)
 
 # Wishlists
 
