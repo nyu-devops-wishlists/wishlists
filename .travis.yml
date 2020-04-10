@@ -19,3 +19,8 @@ script: nosetests
 
 after_success:
  - codecov
+
+ notifications:
+  slack: nyu-devops-s20:cfgDG1yUaeTmmsSNGwIra3bG
+
+  travis encrypt "nyu-devops-s20:cfgDG1yUaeTmmsSNGwIra3bG" --add notifications.slack
