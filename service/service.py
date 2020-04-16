@@ -9,6 +9,7 @@ import sys
 import logging
 from flask import Flask, jsonify, request, url_for, make_response, abort
 from flask_api import status  # HTTP Status Codes
+from werkzeug.exceptions import NotFound
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
@@ -24,8 +25,10 @@ from . import app
 @app.route("/")
 def index():
     """ Root URL response """
-    return "Reminder: return some useful information in json format about the service here", status.HTTP_200_OK
-
+    # return  "Reminder: return some useful information in json format about the service here", status.HTTP_200_OK
+    return """
+        <html><head><title>Wishlist Demo RESTful Service</title></head><body>Wishlist Demo RESTful Service</body></html>
+    """
 ######################################################################
 # ADD A NEW WISHLIST
 ######################################################################
@@ -132,6 +135,15 @@ def share_wishlist(wishlist_id):
     wishlist.save()
     message = wishlist.serialize()
     return make_response(jsonify(message), status.HTTP_200_OK)
+
+######################################################################
+# DELETE ALL WISHLIST DATA (for testing only)
+######################################################################
+@app.route('/wishlists/reset', methods=['DELETE'])
+def wishlists_reset():
+    """ Removes all wishlists from the database """
+    Wishlist.remove_all()
+    return make_response('', status.HTTP_204_NO_CONTENT)
 
 #---------------------------------------------------------------------
 #                I T E M   M E T H O D S

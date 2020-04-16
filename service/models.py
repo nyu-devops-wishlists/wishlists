@@ -86,10 +86,14 @@ class Wishlist(db.Model):
             # self.id = data["id"]
             self.name = data["name"]
             self.email = data["email"]
-            self.shared_with1 = data["shared_with1"]
-            self.shared_with2 = data["shared_with2"]
-            self.shared_with3 = data["shared_with3"]
-            self.shared = data["shared"]
+            if 'shared_with1' in data:
+                self.shared_with1 = data["shared_with1"]
+            if 'shared_with2' in data:
+                self.shared_with2 = data["shared_with2"]
+            if 'shared_with3' in data:
+                self.shared_with3 = data["shared_with3"]
+            if 'shared' in data:
+                self.shared = data["shared"]
 
         except KeyError as error:
             raise DataValidationError("Invalid Wishlist: missing " + error.args[0])
@@ -109,6 +113,11 @@ class Wishlist(db.Model):
         app.app_context().push()
         db.create_all()  # make our sqlalchemy tables
 
+    @classmethod
+    def remove_all(cls):
+        """ Removes all documents from the database (use for testing)  """
+        cls.query.delete()
+    
     @classmethod
     def all(cls):
         """ Returns all of the Wishlist in the database """
