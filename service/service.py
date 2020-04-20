@@ -26,9 +26,8 @@ from . import app
 def index():
     """ Root URL response """
     # return  "Reminder: return some useful information in json format about the service here", status.HTTP_200_OK
-    return """
-        <html><head><title>Wishlist Demo RESTful Service</title></head><body>Wishlist Demo RESTful Service</body></html>
-    """
+    return app.send_static_file('index.html')
+
 ######################################################################
 # ADD A NEW WISHLIST
 ######################################################################
