@@ -23,3 +23,14 @@ Scenario: Create a Wishlist
     And I set the "Customer_email" to "rofrano@nyu.edu"
     And I press the "Create" button
     Then I should see the message "Success"
+
+Scenario: Read a Wishlist
+    When I visit the "Home Page"
+    And I set the "Name" to "A"
+    And I press the "Search" button
+    Then I should see "A" in the "Name" field
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see "A" in the results
