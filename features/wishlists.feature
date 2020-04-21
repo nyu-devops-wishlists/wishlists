@@ -16,3 +16,10 @@ Scenario: The server is running
     When I visit the "Home Page"
     Then I should see "Wishlist Demo RESTful Service" in the title
     And I should not see "404 Not Found"
+
+Scenario: Create a Wishlist
+    When I visit the "Home Page"
+    And I set the "Name" to "E"
+    And I set the "Customer_email" to "rofrano@nyu.edu"
+    And I press the "Create" button
+    Then I should see the message "Success"
