@@ -166,9 +166,9 @@ $(function () {
         }
         if (customer_email) {
             if (queryString.length > 0) {
-                queryString += '&customer_email=' + customer_email
+                queryString += '&email=' + customer_email
             } else {
-                queryString += 'customer_email=' + customer_email
+                queryString += 'email=' + customer_email
             }
         }
 

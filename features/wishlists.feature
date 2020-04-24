@@ -41,3 +41,12 @@ Scenario: List all wishlists
     Then I should see "A" in the results
     And I should see "B" in the results
     And I should not see "X" in the results
+
+Scenario: Query a Wishlist by email
+    When I visit the "Home Page"
+    And I set the "customer_email" to "becca@stern.nyu.edu"
+    And I press the "Search" button
+    Then I should see "becca@stern.nyu.edu" in the "customer_email" field
+    And I should not see "tom@stern.nyu.edu" in the "customer_email" field
+    And I should not see "rudi@stern.nyu.edu" in the "customer_email" field
+    And I should not see "isa@stern.nyu.edu" in the "customer_email" field
