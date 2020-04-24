@@ -34,3 +34,10 @@ Scenario: Read a Wishlist
     And I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see "A" in the results
+
+Scenario: List all wishlists
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see "A" in the results
+    And I should see "B" in the results
+    And I should not see "X" in the results

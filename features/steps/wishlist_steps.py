@@ -115,3 +115,9 @@ def step_impl(context, text_string, element_name):
 def step_impl(context, name):
     element = context.driver.find_element_by_id('search_results')
     expect(element.text).to_contain(name)
+
+@then('I should not see "{name}" in the results')
+def step_impl(context, name):
+    element = context.driver.find_element_by_id('search_results')
+    error_msg = "I should not see '%s' in '%s'" % (name, element.text)
+    ensure(name in element.text, False, error_msg)
