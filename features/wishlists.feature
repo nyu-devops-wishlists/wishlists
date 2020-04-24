@@ -50,3 +50,18 @@ Scenario: Query a Wishlist by email
     And I should not see "tom@stern.nyu.edu" in the "customer_email" field
     And I should not see "rudi@stern.nyu.edu" in the "customer_email" field
     And I should not see "isa@stern.nyu.edu" in the "customer_email" field
+
+    Scenario: Count Wishlists per user by email
+    When I visit the "Home Page"
+    And I set the "customer_email" to "becca@stern.nyu.edu"
+    And I press the "Count" button
+    Then I should see the message "Customer_email becca@stern.nyu.edu has 2 wishlists"
+    When I set the "customer_email" to "isa@stern.nyu.edu"
+    And I press the "Count" button
+    Then I should see the message "Customer_email isa@stern.nyu.edu has 1 wishlists"
+    When I set the "customer_email" to "rudi@stern.nyu.edu"
+    And I press the "Count" button
+    Then I should see the message "Customer_email rudi@stern.nyu.edu has 1 wishlists"
+    When I set the "customer_email" to "tom@stern.nyu.edu"
+    And I press the "Count" button
+    Then I should see the message "Customer_email tom@stern.nyu.edu has 1 wishlists"
