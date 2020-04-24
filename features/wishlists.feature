@@ -51,7 +51,7 @@ Scenario: Query a Wishlist by email
     And I should not see "rudi@stern.nyu.edu" in the "customer_email" field
     And I should not see "isa@stern.nyu.edu" in the "customer_email" field
 
-    Scenario: Count Wishlists per user by email
+Scenario: Count Wishlists per user by email
     When I visit the "Home Page"
     And I set the "customer_email" to "becca@stern.nyu.edu"
     And I press the "Count" button
@@ -65,3 +65,36 @@ Scenario: Query a Wishlist by email
     When I set the "customer_email" to "tom@stern.nyu.edu"
     And I press the "Count" button
     Then I should see the message "Customer_email tom@stern.nyu.edu has 1 wishlists"
+
+Scenario: Update a Wishlist
+    When I visit the "Home Page"
+    And I set the "Name" to "A"
+    And I press the "Search" button
+    Then I should see "A" in the "Name" field
+    And I should see "rudi@stern.nyu.edu" in the "customer_email" field
+    When I change "Name" to "Rudi"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see "Rudi" in the "Name" field
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see "Rudi" in the results
+    Then I should not see "A" in the results
+
+Scenario: Delete a Wishlist
+    When I visit the "Home Page"
+    And I set the "Name" to "A"
+    And I press the "Search" button
+    Then I should see "A" in the "Name" field
+    When I copy the "Name" field
+    And I paste the "Name" field
+    And I press the "Delete" button
+    Then I should see the message "Wishlist has been deleted!"
+    When I copy the "Name" field
+    And I paste the "Name" field
+    And I press the "Search" button
+    Then I should not see "A" in the results
