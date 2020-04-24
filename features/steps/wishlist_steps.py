@@ -111,6 +111,13 @@ def step_impl(context, text_string, element_name):
     element = context.driver.find_element_by_id(element_id)
     expect(element.get_attribute('value')).to_equal(text_string)
 
+@then('I should not see "{text_string}" in the "{element_name}" field')
+def step_impl(context, text_string, element_name):
+    element_id = 'wishlist_' + element_name.lower()
+    element = context.driver.find_element_by_id(element_id)
+    error_msg = "I should not see '%s' in '%s'" % (text_string, element.text)
+    ensure(text_string in element.text, False, error_msg)
+
 @then('I should see "{name}" in the results')
 def step_impl(context, name):
     element = context.driver.find_element_by_id('search_results')
