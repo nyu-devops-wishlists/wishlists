@@ -6,7 +6,7 @@ services:
   - postgresql
 
 env:
-  - DATABASE_URI=postgres://postgres:@localhost:5432/test
+  - DATABASE_URI=postgres://kzdwilgo:fKd1PBnExVCu1G6UxN-yC-vN3A6EY6mw@hanno.db.elephantsql.com:5432/kzdwilgo
 
 before_script:
   - psql -c 'create database test;' -U postgres
