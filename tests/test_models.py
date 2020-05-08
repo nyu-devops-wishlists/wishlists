@@ -11,7 +11,7 @@ from tests.factories import WishlistFactory
 from tests.factories import ItemFactory
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
+    "DATABASE_URI", "postgres://kzdwilgo:fKd1PBnExVCu1G6UxN-yC-vN3A6EY6mw@hanno.db.elephantsql.com:5432/kzdwilgo"
 )
 
 ######################################################################
