@@ -11,11 +11,18 @@ Background:
         | C      | isa@stern.nyu.edu    |
         | D      | becca@stern.nyu.edu  |
         | E      | becca@stern.nyu.edu  |
-     
+
 Scenario: The server is running
     When I visit the "Home Page"
     Then I should see "Wishlist Demo RESTful Service" in the title
     And I should not see "404 Not Found"
+
+Scenario: List all wishlists
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see "A" in the results
+    And I should see "B" in the results
+    And I should not see "X" in the results
 
 Scenario: Create a Wishlist
     When I visit the "Home Page"
@@ -34,13 +41,6 @@ Scenario: Read a Wishlist
     And I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see "A" in the results
-
-Scenario: List all wishlists
-    When I visit the "Home Page"
-    And I press the "Search" button
-    Then I should see "A" in the results
-    And I should see "B" in the results
-    And I should not see "X" in the results
 
 Scenario: Query a Wishlist by email
     When I visit the "Home Page"
@@ -90,11 +90,11 @@ Scenario: Delete a Wishlist
     And I set the "Name" to "A"
     And I press the "Search" button
     Then I should see "A" in the "Name" field
-    When I copy the "Name" field
-    And I paste the "Name" field
+    When I copy the "Id" field
+    And I paste the "Id" field
     And I press the "Delete" button
     Then I should see the message "Wishlist has been deleted!"
-    When I copy the "Name" field
-    And I paste the "Name" field
+    When I copy the "Id" field
+    And I paste the "Id" field
     And I press the "Search" button
     Then I should not see "A" in the results

@@ -6,7 +6,8 @@ from behave import *
 from selenium import webdriver
 
 WAIT_SECONDS = 120
-BASE_URL = os.getenv('BASE_URL', 'https://nyu-wishlist-service-s20.us-south.cf.appdomain.cloud/')
+BASE_URL = os.getenv('BASE_URL', 'https://localhost:5000')
+#BASE_URL = os.getenv('BASE_URL', 'https://nyu-wishlist-service-s20.us-south.cf.appdomain.cloud/')
 
 def before_all(context):
     """ Executed once before all tests """
