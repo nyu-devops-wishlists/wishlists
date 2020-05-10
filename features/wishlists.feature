@@ -97,4 +97,5 @@ Scenario: Delete a Wishlist
     When I copy the "Name" field
     And I paste the "Name" field
     And I press the "Search" button
-    Then I should not see "A" in the results
+    Then I should see "B" in the "Name" field 
+    And I should not see "A" in the results
