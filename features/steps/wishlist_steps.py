@@ -126,13 +126,16 @@ def step_impl(context, text_string, element_name):
 
 @then('I should see "{name}" in the results')
 def step_impl(context, name):
-    found = WebDriverWait(context.driver, WAIT_SECONDS).until(
-        expected_conditions.text_to_be_present_in_element(
-            (By.ID, 'search_results'),
-            name
-        )
-    )
-    expect(found).to_be(True)
+    element = context.driver.find_element_by_id('search_results')
+    context.driver.save_screenshot("screenshot.png")
+    expect(element.text).to_contain(name)
+    #element = WebDriverWait(context.driver, WAIT_SECONDS).until(
+    #    expected_conditions.text_to_be_present_in_element_value(
+    #        (By.ID, element_id),
+    #        text_string
+    #    )
+    #)
+    #expect(found).to_be(True)
 
 @then('I should not see "{name}" in the results')
 def step_impl(context, name):
