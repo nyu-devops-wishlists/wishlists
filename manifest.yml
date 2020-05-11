@@ -3,10 +3,6 @@ applications:
   path: .
   instances: 1
   memory: 128M
-  # host: nyu-wishlist-service-s20
-  # domain: mybluemix.net
-  routes:
-  - route: nyu-wishlist-service-s20.us-south.cf.appdomain.cloud
   disk_quota: 1024M
   #command: gunicorn --bind 0.0.0.0:$PORT --log-level=info app:app
   buildpacks: 
